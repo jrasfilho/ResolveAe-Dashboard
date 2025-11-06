@@ -257,7 +257,15 @@ body {
     border-radius: 12px;
     padding: 1.5rem;
     border: 1px solid var(--border-color);
-    height: 400px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+}
+
+.entity-chart-container canvas,
+.monthly-chart-container canvas {
+    flex: 1;
+    max-height: 420px;
 }
 
 .chart-container h3,

@@ -486,20 +486,56 @@ function updateCharts(data) {
                 data: {
                     labels: data.tickets_by_entity.map(e => e.entidade),
                     datasets: [{
-                        label: 'Chamados por Entidade',
+                        label: 'Chamados',
                         data: data.tickets_by_entity.map(e => e.total),
                         backgroundColor: '#3b82f6',
                         borderColor: '#2563eb',
-                        borderWidth: 1
+                        borderWidth: 2,
+                        borderRadius: 8
                     }]
                 },
                 options: {
-                    responsive: false,
+                    responsive: true,
                     maintainAspectRatio: false,
                     indexAxis: 'y',
                     plugins: {
                         legend: {
                             display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#1e293b',
+                            titleColor: '#f1f5f9',
+                            bodyColor: '#94a3b8',
+                            borderColor: '#334155',
+                            borderWidth: 1,
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.x + ' chamados';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#334155'
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#94a3b8',
+                                font: {
+                                    size: 12
+                                }
+                            }
                         }
                     }
                 }
@@ -514,24 +550,72 @@ function updateCharts(data) {
         }
         const monthlyCtx = document.getElementById('monthlyCanvas');
         if (monthlyCtx) {
+            // Formatar labels de mês
+            const monthLabels = data.tickets_by_month.map(m => {
+                const [year, month] = m.mes.split('-');
+                const months = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+                return months[parseInt(month) - 1] + '/' + year.substring(2);
+            });
+
             charts.monthly = new Chart(monthlyCtx, {
                 type: 'line',
                 data: {
-                    labels: data.tickets_by_month.map(m => m.mes),
+                    labels: monthLabels,
                     datasets: [{
-                        label: 'Total de Chamados',
+                        label: 'Chamados',
                         data: data.tickets_by_month.map(m => m.total),
-                        fill: false,
-                        borderColor: '#16a34a',
-                        tension: 0.1
+                        fill: true,
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        borderColor: '#22c55e',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#22c55e',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointHoverRadius: 7
                     }]
                 },
                 options: {
-                    responsive: false,
+                    responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
                         legend: {
                             display: false
+                        },
+                        tooltip: {
+                            backgroundColor: '#1e293b',
+                            titleColor: '#f1f5f9',
+                            bodyColor: '#94a3b8',
+                            borderColor: '#334155',
+                            borderWidth: 1,
+                            padding: 12,
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y + ' chamados';
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            grid: {
+                                color: '#334155'
+                            },
+                            ticks: {
+                                color: '#94a3b8',
+                                maxRotation: 45,
+                                minRotation: 45
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: '#334155'
+                            },
+                            ticks: {
+                                color: '#94a3b8'
+                            }
                         }
                     }
                 }

@@ -82,21 +82,21 @@ class GLPIMetrics {
     }
 
     /**
-     * Obtém chamados por entidade
+     * Obtém chamados por entidade (todos os criados)
      */
     public function getTicketsByEntity() {
         $sql = "
-            SELECT 
-                e.name as entidade,
+            SELECT
+                COALESCE(e.name, 'Sem Entidade') as entidade,
                 COUNT(t.id) as total
             FROM glpi_tickets t
             LEFT JOIN glpi_entities e ON t.entities_id = e.id
-            WHERE t.status IN (1,2,3) AND t.is_deleted = 0
+            WHERE t.is_deleted = 0
             GROUP BY t.entities_id, e.name
             ORDER BY total DESC
             LIMIT 10
         ";
-        
+
         $result = $this->db->query($sql);
         return $result ? $result->fetchAll() : [];
     }
