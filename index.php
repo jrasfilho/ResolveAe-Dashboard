@@ -20,6 +20,9 @@
                 <span class="update-indicator">
                     <i class="fas fa-sync-alt rotating"></i> Atualização automática
                 </span>
+                <button class="config-button" id="open-config" title="Configurações de Visualização">
+                    <i class="fas fa-cog"></i>
+                </button>
             </div>
         </div>
     </header>
@@ -38,7 +41,7 @@
                     </div>
                     <div class="stat-content">
                         <div class="stat-number" id="total-abertos">--</div>
-                        <div class="stat-label">Chamados Totais</div>
+                        <div class="stat-label"><strong>Chamados Totais</strong></div>
                     </div>
                 </div>
 
@@ -183,7 +186,7 @@
 
             <!-- Tabela de Resolvidos por Técnico (30 dias) -->
             <div class="team-performance">
-                <h3>Resolvidos por Técnico (Últimos 30 Dias)</h3>
+                <h3>Resolvidos por Técnico (<span id="period-30-days">Últimos 30 Dias</span>)</h3>
                 <table class="performance-table">
                     <thead>
                         <tr>
@@ -201,7 +204,7 @@
 
             <!-- Tabela de Resolvidos por Técnico (Mês Anterior) -->
             <div class="team-performance">
-                <h3>Resolvidos por Técnico (Mês Anterior)</h3>
+                <h3>Resolvidos por Técnico (<span id="period-previous-month">Mês Anterior</span>)</h3>
                 <table class="performance-table">
                     <thead>
                         <tr>
@@ -286,6 +289,96 @@
             <span>Próxima atualização em: <span id="next-update">30</span>s</span>
         </div>
     </footer>
+
+    <!-- Modal de Configurações -->
+    <div class="config-modal" id="config-modal">
+        <div class="config-modal-content">
+            <div class="config-modal-header">
+                <h2><i class="fas fa-cog"></i> Configurações de Visualização</h2>
+                <button class="config-close" id="close-config">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="config-modal-body">
+                <!-- Presets -->
+                <div class="config-section">
+                    <h3>Presets Rápidos</h3>
+                    <div class="preset-buttons">
+                        <button class="preset-btn" data-preset="tv">
+                            <i class="fas fa-tv"></i>
+                            <span>TV/Projetor</span>
+                        </button>
+                        <button class="preset-btn" data-preset="desktop">
+                            <i class="fas fa-desktop"></i>
+                            <span>Monitor Desktop</span>
+                        </button>
+                        <button class="preset-btn" data-preset="laptop">
+                            <i class="fas fa-laptop"></i>
+                            <span>Laptop</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tamanho de Fonte Geral -->
+                <div class="config-section">
+                    <h3>Tamanho de Fonte Geral</h3>
+                    <div class="config-control">
+                        <input type="range" id="font-scale" min="80" max="150" value="100" step="5">
+                        <span class="config-value" id="font-scale-value">100%</span>
+                    </div>
+                </div>
+
+                <!-- Tamanho dos Números dos Cards -->
+                <div class="config-section">
+                    <h3>Tamanho dos Números (Cards)</h3>
+                    <div class="config-control">
+                        <input type="range" id="number-scale" min="80" max="200" value="100" step="10">
+                        <span class="config-value" id="number-scale-value">100%</span>
+                    </div>
+                </div>
+
+                <!-- Altura dos Gráficos -->
+                <div class="config-section">
+                    <h3>Altura dos Gráficos</h3>
+                    <div class="config-control">
+                        <input type="range" id="chart-height" min="400" max="900" value="700" step="50">
+                        <span class="config-value" id="chart-height-value">700px</span>
+                    </div>
+                </div>
+
+                <!-- Tamanho da Tabela -->
+                <div class="config-section">
+                    <h3>Tamanho de Fonte das Tabelas</h3>
+                    <div class="config-control">
+                        <input type="range" id="table-scale" min="80" max="140" value="100" step="10">
+                        <span class="config-value" id="table-scale-value">100%</span>
+                    </div>
+                </div>
+
+                <!-- Espaçamento -->
+                <div class="config-section">
+                    <h3>Espaçamento entre Elementos</h3>
+                    <div class="config-control">
+                        <select id="spacing-mode">
+                            <option value="compact">Compacto</option>
+                            <option value="normal" selected>Normal</option>
+                            <option value="spacious">Espaçoso</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="config-modal-footer">
+                <button class="config-btn config-btn-secondary" id="reset-config">
+                    <i class="fas fa-undo"></i> Restaurar Padrões
+                </button>
+                <button class="config-btn config-btn-primary" id="save-config">
+                    <i class="fas fa-save"></i> Salvar Configurações
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>

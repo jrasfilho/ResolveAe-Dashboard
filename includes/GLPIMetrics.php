@@ -362,8 +362,49 @@ class GLPIMetrics {
             'satisfaction' => $this->getSatisfactionStats(),
             'open_tickets_details' => $this->getOpenTicketsDetails(),
             'resolved_by_technician_30_days' => $this->getResolvedByTechnicianLast30Days(),
-            'resolved_by_technician_previous_month' => $this->getResolvedByTechnicianPreviousMonth()
+            'resolved_by_technician_previous_month' => $this->getResolvedByTechnicianPreviousMonth(),
+            'period_last_30_days' => $this->getPeriodLast30Days(),
+            'period_previous_month' => $this->getPreviousMonthName()
         ];
+    }
+
+    /**
+     * Obtém o período dos últimos 30 dias formatado
+     */
+    private function getPeriodLast30Days() {
+        $hoje = new DateTime();
+        $inicio = new DateTime();
+        $inicio->modify('-30 days');
+
+        return $inicio->format('d/m/Y') . ' a ' . $hoje->format('d/m/Y');
+    }
+
+    /**
+     * Obtém o nome do mês anterior formatado
+     */
+    private function getPreviousMonthName() {
+        $mesAnterior = new DateTime();
+        $mesAnterior->modify('-1 month');
+
+        $meses = [
+            '01' => 'Janeiro',
+            '02' => 'Fevereiro',
+            '03' => 'Março',
+            '04' => 'Abril',
+            '05' => 'Maio',
+            '06' => 'Junho',
+            '07' => 'Julho',
+            '08' => 'Agosto',
+            '09' => 'Setembro',
+            '10' => 'Outubro',
+            '11' => 'Novembro',
+            '12' => 'Dezembro'
+        ];
+
+        $mesNumero = $mesAnterior->format('m');
+        $ano = $mesAnterior->format('Y');
+
+        return $meses[$mesNumero] . '/' . $ano;
     }
 
     /**
@@ -379,7 +420,7 @@ class GLPIMetrics {
             INNER JOIN glpi_users u ON tu.users_id = u.id
             WHERE tu.type = 2 -- Técnico atribuído
                 AND t.is_deleted = 0
-                AND t.status = 5 -- Resolvido
+                AND t.status = 6 -- Fechado
                 AND t.solvedate >= DATE_SUB(NOW(), INTERVAL 30 DAY)
             GROUP BY u.id, u.firstname, u.realname
             HAVING resolvidos > 0
@@ -404,7 +445,7 @@ class GLPIMetrics {
             INNER JOIN glpi_users u ON tu.users_id = u.id
             WHERE tu.type = 2 -- Técnico atribuído
                 AND t.is_deleted = 0
-                AND t.status = 5 -- Resolvido
+                AND t.status = 6 -- Fechado
                 AND MONTH(t.solvedate) = MONTH(CURRENT_DATE() - INTERVAL 1 MONTH)
                 AND YEAR(t.solvedate) = YEAR(CURRENT_DATE() - INTERVAL 1 MONTH)
             GROUP BY u.id, u.firstname, u.realname

@@ -286,6 +286,21 @@ function updateTeamSlide(data) {
     } else {
         resolvedPrevMonthTable.innerHTML = '<tr><td colspan="2" class="loading">Nenhum dado disponível</td></tr>';
     }
+
+    // Atualizar períodos nos títulos
+    if (data.period_last_30_days) {
+        const period30Days = document.getElementById('period-30-days');
+        if (period30Days) {
+            period30Days.textContent = data.period_last_30_days;
+        }
+    }
+
+    if (data.period_previous_month) {
+        const periodPrevMonth = document.getElementById('period-previous-month');
+        if (periodPrevMonth) {
+            periodPrevMonth.textContent = data.period_previous_month;
+        }
+    }
 }
 
 /**
@@ -871,3 +886,274 @@ checkAPIStatus().then(isOnline => {
 });
 
 console.log('✅ Dashboard GLPI carregado com sucesso!');
+
+/**
+ * SISTEMA DE CONFIGURAÇÕES DE VISUALIZAÇÃO
+ */
+
+// Configurações padrão
+const DEFAULT_CONFIG = {
+    fontScale: 100,
+    numberScale: 100,
+    chartHeight: 700,
+    tableScale: 100,
+    spacingMode: 'normal'
+};
+
+// Presets pré-configurados
+const PRESETS = {
+    tv: {
+        fontScale: 130,
+        numberScale: 150,
+        chartHeight: 800,
+        tableScale: 130,
+        spacingMode: 'spacious'
+    },
+    desktop: {
+        fontScale: 100,
+        numberScale: 100,
+        chartHeight: 700,
+        tableScale: 100,
+        spacingMode: 'normal'
+    },
+    laptop: {
+        fontScale: 85,
+        numberScale: 90,
+        chartHeight: 500,
+        tableScale: 90,
+        spacingMode: 'compact'
+    }
+};
+
+// Elementos do DOM
+const configModal = document.getElementById('config-modal');
+const openConfigBtn = document.getElementById('open-config');
+const closeConfigBtn = document.getElementById('close-config');
+const saveConfigBtn = document.getElementById('save-config');
+const resetConfigBtn = document.getElementById('reset-config');
+
+// Controles
+const fontScaleInput = document.getElementById('font-scale');
+const numberScaleInput = document.getElementById('number-scale');
+const chartHeightInput = document.getElementById('chart-height');
+const tableScaleInput = document.getElementById('table-scale');
+const spacingModeSelect = document.getElementById('spacing-mode');
+
+// Valores exibidos
+const fontScaleValue = document.getElementById('font-scale-value');
+const numberScaleValue = document.getElementById('number-scale-value');
+const chartHeightValue = document.getElementById('chart-height-value');
+const tableScaleValue = document.getElementById('table-scale-value');
+
+/**
+ * Carregar configurações salvas do localStorage
+ */
+function loadConfig() {
+    const savedConfig = localStorage.getItem('dashboardConfig');
+    if (savedConfig) {
+        try {
+            const config = JSON.parse(savedConfig);
+            applyConfig(config);
+            updateConfigUI(config);
+            console.log('⚙️ Configurações carregadas:', config);
+        } catch (e) {
+            console.error('Erro ao carregar configurações:', e);
+            applyConfig(DEFAULT_CONFIG);
+        }
+    } else {
+        applyConfig(DEFAULT_CONFIG);
+    }
+}
+
+/**
+ * Aplicar configurações ao CSS
+ */
+function applyConfig(config) {
+    const root = document.documentElement;
+
+    // Font scale
+    root.style.setProperty('--font-scale', config.fontScale / 100);
+
+    // Number scale
+    root.style.setProperty('--number-scale', config.numberScale / 100);
+
+    // Chart height
+    root.style.setProperty('--chart-height', config.chartHeight + 'px');
+
+    // Table scale
+    root.style.setProperty('--table-scale', config.tableScale / 100);
+
+    // Spacing
+    const spacingValues = {
+        compact: 0.7,
+        normal: 1,
+        spacious: 1.3
+    };
+    root.style.setProperty('--spacing-multiplier', spacingValues[config.spacingMode] || 1);
+}
+
+/**
+ * Atualizar interface de configuração com valores atuais
+ */
+function updateConfigUI(config) {
+    fontScaleInput.value = config.fontScale;
+    fontScaleValue.textContent = config.fontScale + '%';
+
+    numberScaleInput.value = config.numberScale;
+    numberScaleValue.textContent = config.numberScale + '%';
+
+    chartHeightInput.value = config.chartHeight;
+    chartHeightValue.textContent = config.chartHeight + 'px';
+
+    tableScaleInput.value = config.tableScale;
+    tableScaleValue.textContent = config.tableScale + '%';
+
+    spacingModeSelect.value = config.spacingMode;
+}
+
+/**
+ * Obter configuração atual da UI
+ */
+function getCurrentConfig() {
+    return {
+        fontScale: parseInt(fontScaleInput.value),
+        numberScale: parseInt(numberScaleInput.value),
+        chartHeight: parseInt(chartHeightInput.value),
+        tableScale: parseInt(tableScaleInput.value),
+        spacingMode: spacingModeSelect.value
+    };
+}
+
+/**
+ * Salvar configurações no localStorage
+ */
+function saveConfig() {
+    const config = getCurrentConfig();
+    localStorage.setItem('dashboardConfig', JSON.stringify(config));
+    applyConfig(config);
+    closeModal();
+    showNotification('Configurações salvas com sucesso!', 'success');
+    console.log('💾 Configurações salvas:', config);
+
+    // Recarregar gráficos para aplicar nova altura
+    if (lastData) {
+        updateCharts(lastData);
+    }
+}
+
+/**
+ * Resetar para configurações padrão
+ */
+function resetConfig() {
+    if (confirm('Tem certeza que deseja restaurar as configurações padrão?')) {
+        localStorage.removeItem('dashboardConfig');
+        applyConfig(DEFAULT_CONFIG);
+        updateConfigUI(DEFAULT_CONFIG);
+        showNotification('Configurações restauradas para o padrão', 'success');
+
+        // Recarregar gráficos
+        if (lastData) {
+            updateCharts(lastData);
+        }
+    }
+}
+
+/**
+ * Aplicar preset
+ */
+function applyPreset(presetName, buttonElement) {
+    const preset = PRESETS[presetName];
+    if (preset) {
+        updateConfigUI(preset);
+        applyConfig(preset);
+
+        // Destacar botão ativo
+        document.querySelectorAll('.preset-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        if (buttonElement) {
+            buttonElement.classList.add('active');
+        }
+
+        showNotification(`Preset "${presetName}" aplicado. Clique em Salvar para manter.`, 'info');
+    }
+}
+
+/**
+ * Abrir modal
+ */
+function openModal() {
+    configModal.classList.add('active');
+    updateConfigUI(getCurrentConfig());
+}
+
+/**
+ * Fechar modal
+ */
+function closeModal() {
+    configModal.classList.remove('active');
+}
+
+/**
+ * Event Listeners para configurações
+ */
+
+// Abrir/Fechar modal
+openConfigBtn.addEventListener('click', openModal);
+closeConfigBtn.addEventListener('click', closeModal);
+
+// Fechar ao clicar fora do modal
+configModal.addEventListener('click', (e) => {
+    if (e.target === configModal) {
+        closeModal();
+    }
+});
+
+// Atalho ESC para fechar
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && configModal.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Salvar e Resetar
+saveConfigBtn.addEventListener('click', saveConfig);
+resetConfigBtn.addEventListener('click', resetConfig);
+
+// Atualizar valores em tempo real (preview)
+fontScaleInput.addEventListener('input', (e) => {
+    fontScaleValue.textContent = e.target.value + '%';
+    applyConfig(getCurrentConfig());
+});
+
+numberScaleInput.addEventListener('input', (e) => {
+    numberScaleValue.textContent = e.target.value + '%';
+    applyConfig(getCurrentConfig());
+});
+
+chartHeightInput.addEventListener('input', (e) => {
+    chartHeightValue.textContent = e.target.value + 'px';
+    applyConfig(getCurrentConfig());
+});
+
+tableScaleInput.addEventListener('input', (e) => {
+    tableScaleValue.textContent = e.target.value + '%';
+    applyConfig(getCurrentConfig());
+});
+
+spacingModeSelect.addEventListener('change', () => {
+    applyConfig(getCurrentConfig());
+});
+
+// Presets
+document.querySelectorAll('.preset-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        const preset = this.dataset.preset;
+        applyPreset(preset, this);
+    });
+});
+
+// Carregar configurações ao iniciar
+loadConfig();
+
+console.log('⚙️ Sistema de configurações inicializado');

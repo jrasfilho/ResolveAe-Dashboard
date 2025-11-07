@@ -13,7 +13,7 @@
     --warning-color: #f59e0b;
     --danger-color: #ef4444;
     --info-color: #3b82f6;
-    
+
     /* Cores neutras */
     --bg-color: #0f172a;
     --card-bg: #1e293b;
@@ -21,14 +21,21 @@
     --text-primary: #f1f5f9;
     --text-secondary: #94a3b8;
     --border-color: #334155;
-    
+
     /* Sombras */
     --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
     --shadow-md: 0 4px 12px rgba(0,0,0,0.15);
     --shadow-lg: 0 8px 24px rgba(0,0,0,0.2);
-    
+
     /* Animações */
     --transition: all 0.3s ease;
+
+    /* Configurações dinâmicas */
+    --font-scale: 1;
+    --number-scale: 1;
+    --chart-height: 700px;
+    --table-scale: 1;
+    --spacing-multiplier: 1;
 }
 
 body {
@@ -39,6 +46,7 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    font-size: calc(16px * var(--font-scale));
 }
 
 /* Header */
@@ -190,6 +198,11 @@ body {
     display: none;
 }
 
+.stat-card.highlight .stat-icon {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+}
+
 .stat-icon {
     width: 60px;
     height: 60px;
@@ -227,7 +240,7 @@ body {
 }
 
 .stat-number {
-    font-size: 2.5rem;
+    font-size: calc(2.5rem * var(--number-scale));
     font-weight: bold;
     line-height: 1;
     margin-bottom: 0.5rem;
@@ -269,9 +282,9 @@ body {
 .monthly-chart-container {
     background: var(--card-bg);
     border-radius: 12px;
-    padding: 1.5rem;
+    padding: calc(1.5rem * var(--spacing-multiplier));
     border: 1px solid var(--border-color);
-    height: 700px;
+    height: var(--chart-height);
     display: flex;
     flex-direction: column;
 }
@@ -412,6 +425,7 @@ body {
     padding: 1rem;
     border-top: 1px solid var(--border-color);
     color: var(--text-primary);
+    font-size: calc(1rem * var(--table-scale));
 }
 
 .performance-table tbody tr {
@@ -841,4 +855,276 @@ body {
 @keyframes dataFlash {
     0% { background-color: rgba(37, 99, 235, 0.2); }
     100% { background-color: transparent; }
+}
+
+/* Botão de Configurações */
+.config-button {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.config-button:hover {
+    background: var(--card-hover);
+    color: var(--primary-color);
+    transform: rotate(90deg);
+}
+
+/* Modal de Configurações */
+.config-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    animation: fadeIn 0.3s ease;
+}
+
+.config-modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.config-modal-content {
+    background: var(--card-bg);
+    border-radius: 16px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-lg);
+    animation: slideInUp 0.3s ease;
+}
+
+@keyframes slideInUp {
+    from {
+        transform: translateY(50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.config-modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.config-modal-header h2 {
+    margin: 0;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.5rem;
+}
+
+.config-close {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 8px;
+    transition: var(--transition);
+}
+
+.config-close:hover {
+    background: var(--card-hover);
+    color: var(--danger-color);
+}
+
+.config-modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.config-section {
+    margin-bottom: 2rem;
+}
+
+.config-section:last-child {
+    margin-bottom: 0;
+}
+
+.config-section h3 {
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.config-control {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.config-control input[type="range"] {
+    flex: 1;
+    height: 6px;
+    background: var(--border-color);
+    border-radius: 3px;
+    outline: none;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.config-control input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.config-control input[type="range"]::-webkit-slider-thumb:hover {
+    background: var(--secondary-color);
+    transform: scale(1.2);
+}
+
+.config-control input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+    transition: var(--transition);
+}
+
+.config-control input[type="range"]::-moz-range-thumb:hover {
+    background: var(--secondary-color);
+    transform: scale(1.2);
+}
+
+.config-control select {
+    flex: 1;
+    padding: 0.75rem;
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.config-control select:hover {
+    border-color: var(--primary-color);
+}
+
+.config-value {
+    min-width: 70px;
+    text-align: right;
+    color: var(--primary-color);
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Preset Buttons */
+.preset-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.preset-btn {
+    background: var(--bg-color);
+    border: 2px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.preset-btn i {
+    font-size: 2rem;
+    color: var(--primary-color);
+}
+
+.preset-btn:hover {
+    border-color: var(--primary-color);
+    background: var(--card-hover);
+    transform: translateY(-2px);
+}
+
+.preset-btn.active {
+    border-color: var(--primary-color);
+    background: rgba(37, 99, 235, 0.1);
+}
+
+/* Modal Footer */
+.config-modal-footer {
+    padding: 1.5rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    gap: 1rem;
+    justify-content: flex-end;
+}
+
+.config-btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition);
+}
+
+.config-btn-primary {
+    background: var(--primary-color);
+    color: white;
+}
+
+.config-btn-primary:hover {
+    background: var(--secondary-color);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.config-btn-secondary {
+    background: var(--card-hover);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.config-btn-secondary:hover {
+    background: var(--bg-color);
+    border-color: var(--danger-color);
+    color: var(--danger-color);
 }
