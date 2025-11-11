@@ -835,16 +835,29 @@ function showNotification(message, type = 'info') {
     // Criar nova notificação
     const alert = document.createElement('div');
     alert.className = `alert ${type}`;
-    alert.textContent = message;
+    
+    const messageSpan = document.createElement('span');
+    messageSpan.textContent = message;
+    alert.appendChild(messageSpan);
+
+    const closeButton = document.createElement('button');
+    closeButton.className = 'alert-close-btn';
+    closeButton.innerHTML = '&times;'; // '×' character
+    closeButton.onclick = function() {
+        alert.remove();
+    };
+    alert.appendChild(closeButton);
     
     document.body.appendChild(alert);
     
     // Remover após 3 segundos
     setTimeout(() => {
-        alert.style.animation = 'slideOutRight 0.3s ease';
-        setTimeout(() => {
-            alert.remove();
-        }, 300);
+        if (alert.parentNode) { // Check if alert is still in DOM
+            alert.style.animation = 'slideOutRight 0.3s ease';
+            setTimeout(() => {
+                alert.remove();
+            }, 300);
+        }
     }, 3000);
 }
 

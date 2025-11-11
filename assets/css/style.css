@@ -813,6 +813,27 @@ body {
     background: rgba(16, 185, 129, 0.1);
 }
 
+.alert {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.alert-close-btn {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 0.5rem;
+    transition: var(--transition);
+}
+
+.alert-close-btn:hover {
+    color: var(--danger-color);
+}
+
 /* Modo TV (Tela Cheia) */
 @media (min-width: 1600px) {
     body {
