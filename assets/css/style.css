@@ -875,7 +875,6 @@ body {
 .config-button:hover {
     background: var(--card-hover);
     color: var(--primary-color);
-    transform: rotate(90deg);
 }
 
 /* Modal de Configurações */
