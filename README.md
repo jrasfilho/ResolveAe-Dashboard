@@ -29,23 +29,38 @@ O **ResolveAe Dashboard** é uma solução profissional e open-source para monit
 
 ### 1. 📋 Visão Operacional (Slide Principal)
 Foco no "agora" para a equipe de suporte:
+![Visão Geral](images/01.%20Visão%20Geral%20dos%20Chamados.png)
 - **Status em Tempo Real:** Chamados Novos, Em Atendimento, Pendentes.
 - **Prioridade:** Gráfico de distribuição de urgência.
 - **SLA:** Alertas visuais para chamados vencidos ou próximos do vencimento.
 
 ### 2. 🏆 Performance da Equipe
 Gamificação e acompanhamento de produtividade:
+![Performance da Equipe](images/02.%20Performance%20da%20Equipe.png)
 - **Ranking de Técnicos:** Quem está resolvendo mais chamados.
 - **Tempo Médio de Resolução:** Monitoramento de agilidade.
 - **Satisfação do Usuário:** Índice CSAT baseado nas pesquisas do GLPI.
 
 ### 3. 📊 Análise Tática
-- **Top Categorias:** Identifique os problemas recorrentes (ex: Impressoras, Rede, Software).
+Identifique os problemas recorrentes (ex: Impressoras, Rede, Software):
+![Análise por Categoria](images/03.%20Análise%20por%20Categoria.png)
+- **Top Categorias:** Gráfico de rosca interativo.
 - **Tendências:** Comparativo Hoje vs. Ontem e evolução semanal.
 
-### 4. 🔥 Heatmap (Mapa de Calor)
-- Identifique gargalos de atendimento.
-- Matriz visual: Dia da Semana x Horário.
+### 4. 🏢 Análise por Entidade e Evolução
+![Análise por Entidade](images/04.%20Análise%20por%20Entidade%20e%20Evolução%20Mensal.png)
+- **Chamados por Entidade:** Distribuição de carga por cliente/departamento.
+- **Evolução Mensal:** Histórico de volume de chamados.
+
+### 5. 🖨️ Gestão de Insumos e Consumíveis
+![Gestão de Insumos](images/05.%20Gestão%20de%20Insumos%20e%20Consumíveis.png)
+- **Monitoramento de Toners:** Níveis de suprimentos de impressoras.
+- **Alertas de Reposição:** Saiba quando comprar novos insumos.
+
+### 6. 📤 Exportação e Relatórios
+![Exportação](images/06.%20Exportar%20Relatórios.png)
+- **Formatos:** PDF, Excel e CSV.
+- **Filtros:** Selecione por data, entidade e tipo de métrica.
 
 ---
 
