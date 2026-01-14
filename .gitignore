@@ -1,5 +1,18 @@
-
 .gemini/
 gha-creds-*.json
+
+# Ignorar arquivos de configuração reais (com senhas)
 config/database.php
 src/Config/database.php
+
+# Manter os arquivos de exemplo (para quem baixar saber configurar)
+!config/database.example.php
+!src/Config/database.example.php
+
+# Ignorar pastas de sistema ou desnecessárias
+.DS_Store
+Thumbs.db
+node_modules/
+
+# Ignorar pastas de backup ou temporárias
+OLD/
